@@ -157,7 +157,7 @@ footer b{color:var(--fg);font-family:var(--display)}
     <div class="tiles" style="margin-top:16px">
       <button type="button" class="tile" data-go="breakfast" style="--c:var(--morning)"><span class="e">🍳</span><b>Breakfast</b><small>Skip the hotel breakfast. 9 chains under $6.</small></button>
       <button type="button" class="tile" data-go="lunch" style="--c:var(--noon)"><span class="e">🍱</span><b>Lunch</b><small>Secret lunch menus. 9 chains from $3.</small></button>
-      <button type="button" class="tile" data-go="dinner" style="--c:var(--night)"><span class="e">🍜</span><b>Dinner</b><small>Cheap and cozy after a long day.</small></button>
+      <button type="button" class="tile" data-go="dinner" style="--c:var(--night)"><span class="e">🍜</span><b>Dinner</b><small>Cheap dinner spots. 9 chains from 70¢.</small></button>
       <button type="button" class="tile" data-go="talk" style="--c:var(--brave)"><span class="e">🗣</span><b>Talk</b><small>Shy, Lazy, or Brave? Japanese phrases.</small></button>
       <button type="button" class="tile wide" data-go="sheets" style="--c:var(--brown)"><span class="e">📋</span><span><b>Cheat sheets</b><br><small>All our lists from Instagram. Tap to zoom in!</small></span></button>
     </div>
@@ -287,16 +287,19 @@ const MEALS = {
     ]
   },
   dinner:{
-    color:"var(--night)", eyebrow:"Dinner · Our dinner post is coming soon!",
-    title:"Cheap dinner after a long day 🍜", lead:"Cozy chains you'll find almost everywhere.",
-    note:"💴 Dinner prices coming with our dinner post. Check the menu at the shop for now.",
+    color:"var(--night)", eyebrow:"Dinner · From our post “Cheap dinner spots”",
+    title:"Cheap dinner after a long day 🍜", lead:"For when your feet are done for the day. 9 chains from 70¢.",
+    note:"🍢 Kushikatsu rule: dip your skewer in the shared sauce only ONCE! Prices tax included, checked November 2026.",
     shops:[
-      {ja:"鳥貴族", en:"Torikizoku", what:"Yakitori pub. Every item is the same price.", tip:"Your first izakaya? Start here. Zero menu math."},
-      {ja:"くら寿司", en:"Kura Sushi", what:"Conveyor-belt sushi. Order more on the touch screen.", tip:"Kids love it. Adults stack plates like trophies."},
-      {ja:"大戸屋", en:"Ootoya", what:"Japanese home-style set meals.", tip:"Tastes like a Japanese mom's cooking. Almost as good as ours."},
-      {ja:"やよい軒", en:"Yayoiken", what:"Set meals. Free rice refills at many shops.", tip:"Rice refill? FREE. My diet? Gone."},
-      {ja:"CoCo壱番屋", en:"CoCo Ichibanya", what:"Japanese curry. Pick your spice level and toppings.", tip:"Start mild. Trust us."},
-      {ja:"牛角", en:"Gyu-Kaku", what:"Yakiniku. Grill your own meat at the table.", tip:"You cook, they wash the dishes. Vacation."}
+      {ja:"くら寿司", en:"Kura Sushi", what:"Conveyor-belt sushi, priced per plate", price:"¥110~", usd:"$0.70~", tip:"5 plates = a prize game. Kids won't stop eating."},
+      {ja:"鳥貴族", en:"Torikizoku", what:"Yakitori pub. Every item is the same price", price:"¥410", usd:"$2.61", tip:"Every item, same price. Zero menu math."},
+      {ja:"モスバーガー", en:"MOS Burger", what:"MOS Burger (Japan's own burger chain)", price:"¥500", usd:"$3.18", tip:"Ask about the rice-bun burger!"},
+      {ja:"CoCo壱番屋", en:"CoCo Ichibanya", what:"Pork curry. Pick your spice level and toppings", price:"¥646", usd:"$4.11", tip:"Start mild. Trust us."},
+      {ja:"やよい軒", en:"Yayoiken", what:"Ginger pork set meal. Free rice refills (eat-in)", price:"¥890", usd:"$5.67", tip:"Rice refill? FREE. My diet? Gone."},
+      {ja:"串カツ田中", en:"Kushikatsu Tanaka", what:"5-skewer classic set (Osaka-style fried skewers)", price:"¥924", usd:"$5.89", tip:"Rule #1: No double dipping in the shared sauce. Seriously."},
+      {ja:"一蘭", en:"Ichiran", what:"Tonkotsu ramen in your own little booth", price:"¥980~", usd:"$6.24~", tip:"Your own ramen booth. Introverts, rejoice."},
+      {ja:"大戸屋", en:"Ootoya", what:"Chicken nanban set meal (Japanese home-style)", price:"¥1,070", usd:"$6.82", tip:"Tastes like a Japanese mom's cooking. Almost as good as ours."},
+      {ja:"鶴橋風月", en:"Tsuruhashi Fugetsu", what:"Okonomiyaki cooked on the griddle in front of you. Price varies by store", tip:"Dinner AND a show."}
     ]
   }
 };
@@ -307,7 +310,7 @@ const SHOP_TYPES = {
   "コメダ珈琲店":"☕ Coffee shop", "サイゼリヤ":"🍝 Italian family restaurant", "丸亀製麺":"🍜 Udon noodles",
   "スシロー":"🍣 Conveyor-belt sushi", "餃子の王将":"🥟 Ramen & gyoza", "バーミヤン":"🥢 Chinese family restaurant",
   "デニーズ":"🍽 Family restaurant", "鳥貴族":"🍢 Yakitori pub", "くら寿司":"🍣 Conveyor-belt sushi",
-  "大戸屋":"🍱 Japanese set meals", "やよい軒":"🍱 Japanese set meals", "CoCo壱番屋":"🍛 Japanese curry", "牛角":"🥩 Yakiniku (BBQ)"
+  "大戸屋":"🍱 Japanese set meals", "やよい軒":"🍱 Japanese set meals", "CoCo壱番屋":"🍛 Japanese curry", "牛角":"🥩 Yakiniku (BBQ)", "モスバーガー":"🍔 Japanese burgers", "串カツ田中":"🍢 Fried skewers (kushikatsu)", "一蘭":"🍜 Ramen", "鶴橋風月":"🥞 Okonomiyaki"
 };
 const MEAL_PHOTOS = {breakfast:true, lunch:true}; /* photos: img/shop-<meal>-<number>.jpg, same order as the list */
 /* ===== CHEAT SHEETS: newest first. file = img/<id>.jpg, thumbnail = img/<id>-thumb.jpg ===== */
