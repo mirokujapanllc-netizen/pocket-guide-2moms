@@ -74,6 +74,9 @@ h2{font-family:var(--display);font-weight:800;font-size:clamp(26px,7vw,36px);lin
 .shop .price{font-family:var(--display);font-weight:800;font-size:18px;color:var(--red);margin:0}
 .shop .price small{font-family:var(--jp);font-weight:500;font-size:13px;color:var(--muted)}
 .shop .tip{margin:2px 0 0}
+.shop .simg{width:100%;aspect-ratio:345/220;object-fit:cover;border-radius:12px;background:var(--brown-soft);margin-bottom:4px}
+.shop .type{align-self:flex-start;font-family:var(--display);font-size:12px;font-weight:800;letter-spacing:.04em;background:var(--brown-soft);color:var(--fg);padding:3px 10px;border-radius:999px}
+
 /* phrase deck (talk) */
 .modes{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:8px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .mode{font:inherit;cursor:pointer;border:2px solid var(--line);background:var(--surface);color:var(--fg);border-radius:16px;padding:10px 6px;display:flex;flex-direction:column;align-items:center;gap:2px;text-align:center}
@@ -297,6 +300,16 @@ const MEALS = {
     ]
   }
 };
+/* What kind of shop it is (shown as a label on every shop card) */
+const SHOP_TYPES = {
+  "なか卯":"🍚 Rice bowls & udon", "すき家":"🐮 Beef bowls", "松屋":"🐮 Beef bowls & set meals", "吉野家":"🐮 Beef bowls",
+  "マクドナルド":"🍔 Burgers", "カフェ・ベローチェ":"☕ Café", "ガスト":"🍽 Family restaurant", "ドトールコーヒー":"☕ Café",
+  "コメダ珈琲店":"☕ Coffee shop", "サイゼリヤ":"🍝 Italian family restaurant", "丸亀製麺":"🍜 Udon noodles",
+  "スシロー":"🍣 Conveyor-belt sushi", "餃子の王将":"🥟 Ramen & gyoza", "バーミヤン":"🥢 Chinese family restaurant",
+  "デニーズ":"🍽 Family restaurant", "鳥貴族":"🍢 Yakitori pub", "くら寿司":"🍣 Conveyor-belt sushi",
+  "大戸屋":"🍱 Japanese set meals", "やよい軒":"🍱 Japanese set meals", "CoCo壱番屋":"🍛 Japanese curry", "牛角":"🥩 Yakiniku (BBQ)"
+};
+const MEAL_PHOTOS = {breakfast:true, lunch:true}; /* photos: img/shop-<meal>-<number>.jpg, same order as the list */
 /* ===== CHEAT SHEETS: newest first. file = img/<id>.jpg, thumbnail = img/<id>-thumb.jpg ===== */
 const SHEETS = [
   {id:"lunch", title:"Secret lunch menus", note:"9 chains from $3", isNew:true},
@@ -447,9 +460,11 @@ function renderMeal(key){
   document.getElementById("mealNote").textContent = m.note;
   const ms=document.getElementById("mealSheet"); ms.hidden=!MEAL_SHEET[key]; ms.onclick=()=>openViewer(MEAL_SHEET[key]);
   const list = document.getElementById("shopList"); list.innerHTML = "";
-  m.shops.forEach(s=>{
+  m.shops.forEach((s,i)=>{
     const li = document.createElement("li"); li.className = "shop"; li.style.setProperty("--c", m.color);
-    li.innerHTML = `<div class="top"><p class="jn"></p><p class="en"></p></div><p class="what"></p>`;
+    if(MEAL_PHOTOS[key]){ const im=document.createElement("img"); im.className="simg"; im.loading="lazy"; im.alt=s.en+" "+s.what; im.src="img/shop-"+key+"-"+(i+1)+".jpg"; li.appendChild(im); }
+    if(SHOP_TYPES[s.ja]){ const t=document.createElement("span"); t.className="type"; t.textContent=SHOP_TYPES[s.ja]; li.appendChild(t); }
+    li.insertAdjacentHTML("beforeend", `<div class="top"><p class="jn"></p><p class="en"></p></div><p class="what"></p>`);
     li.querySelector(".jn").textContent = s.ja;
     li.querySelector(".en").textContent = s.en;
     li.querySelector(".what").textContent = s.what;
