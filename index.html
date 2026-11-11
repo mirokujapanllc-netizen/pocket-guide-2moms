@@ -157,7 +157,7 @@ footer b{color:var(--fg);font-family:var(--display)}
     <div class="tiles" style="margin-top:16px">
       <button type="button" class="tile" data-go="breakfast" style="--c:var(--morning)"><span class="e">🍳</span><b>Breakfast</b><small>Skip the hotel breakfast. 9 chains under $6.</small></button>
       <button type="button" class="tile" data-go="lunch" style="--c:var(--noon)"><span class="e">🍱</span><b>Lunch</b><small>Secret lunch menus. 9 chains from $3.</small></button>
-      <button type="button" class="tile" data-go="dinner" style="--c:var(--night)"><span class="e">🍜</span><b>Dinner</b><small>Cheap dinner spots. 9 chains from 70¢.</small></button>
+      <button type="button" class="tile" data-go="dinner" style="--c:var(--night)"><span class="e">🍜</span><b>Dinner</b><small>Dinner deals. 9 chains from 70¢.</small></button>
       <button type="button" class="tile" data-go="talk" style="--c:var(--brave)"><span class="e">🗣</span><b>Talk</b><small>Shy, Lazy, or Brave? Japanese phrases.</small></button>
       <button type="button" class="tile wide" data-go="sheets" style="--c:var(--brown)"><span class="e">📋</span><span><b>Cheat sheets</b><br><small>All our lists from Instagram. Tap to zoom in!</small></span></button>
     </div>
@@ -287,8 +287,8 @@ const MEALS = {
     ]
   },
   dinner:{
-    color:"var(--night)", eyebrow:"Dinner · From our post “Cheap dinner spots”",
-    title:"Cheap dinner after a long day 🍜", lead:"For when your feet are done for the day. 9 chains from 70¢.",
+    color:"var(--night)", eyebrow:"Dinner · From our post “Dinner deals”",
+    title:"Dinner deals 🍜", lead:"For when your feet are done for the day. 9 chains from 70¢.",
     note:"🍺 Look for “Happy Hour” or 飲み放題 (all-you-can-drink) signs. Deals vary by store! 🍢 Kushikatsu rule: dip in the shared sauce only ONCE. Prices tax included, checked November 2026.",
     shops:[
       {ja:"くら寿司", en:"Kura Sushi", what:"Conveyor-belt sushi, priced per plate", price:"¥110~", usd:"$0.70~", tip:"5 plates = a prize game. Kids won't stop eating."},
@@ -344,8 +344,8 @@ const PHRASES = [
   {c:"food", new:true, post:"Secret lunch menus", ja:"ごはん少なめでお願いします。", ro:"Gohan sukuname de onegaishimasu.", en:"Less rice, please.", say:"goh-hahn soo-koo-nah-meh deh oh-neh-guy-shee-mas", tip:"Japanese portions of rice can be BIG."},
   {c:"food", new:true, post:"Secret lunch menus", ja:"大盛りにできますか？", ro:"Ōmori ni dekimasu ka?", en:"Can I get a large size?", say:"oh-moh-ree nee deh-kee-mas-ka", tip:"Some shops do it for free, some charge a little. Ask!"},
   {c:"food", new:true, post:"Secret lunch menus", ja:"別々に払えますか？", ro:"Betsubetsu ni haraemasu ka?", en:"Can we pay separately?", say:"bet-soo-bet-soo nee hah-rah-eh-mas-ka", tip:""},
-  {c:"food", new:true, post:"Cheap dinner spots", ja:"飲み放題はありますか？", ro:"Nomihōdai wa arimasu ka?", en:"Do you have all-you-can-drink?", say:"noh-mee-hoh-dai wah ah-ree-mas-ka", tip:"Look for 飲み放題 on signs. Usually a set time, like 90 minutes. Rules vary by store."},
-  {c:"food", new:true, post:"Cheap dinner spots", ja:"ハッピーアワーはありますか？", ro:"Happī awā wa arimasu ka?", en:"Do you have happy hour?", say:"hap-pee ah-wah wah ah-ree-mas-ka", tip:"Some stores do cheap drinks in the early evening. Check the sign at the door!"},
+  {c:"food", new:true, post:"Dinner deals", ja:"飲み放題はありますか？", ro:"Nomihōdai wa arimasu ka?", en:"Do you have all-you-can-drink?", say:"noh-mee-hoh-dai wah ah-ree-mas-ka", tip:"Look for 飲み放題 on signs. Usually a set time, like 90 minutes. Rules vary by store."},
+  {c:"food", new:true, post:"Dinner deals", ja:"ハッピーアワーはありますか？", ro:"Happī awā wa arimasu ka?", en:"Do you have happy hour?", say:"hap-pee ah-wah wah ah-ree-mas-ka", tip:"Some stores do cheap drinks in the early evening. Check the sign at the door!"},
   {c:"food", ja:"すみません！", ro:"Sumimasen!", en:"Excuse me! (to call the staff)", say:"soo-mee-mah-sen", tip:"Raise your hand a little. Too shy? Stare, catch their eye, hand up. FAST."},
   {c:"food", ja:"お水をください。", ro:"Omizu o kudasai.", en:"Water, please.", say:"oh-mee-zoo oh koo-dah-sai", tip:"Some places serve green tea. Water is free too, just ask!"},
   {c:"food", ja:"お水のおかわりをください。", ro:"Omizu no okawari o kudasai.", en:"More water, please.", say:"oh-mee-zoo no oh-kah-wah-ree oh koo-dah-sai", tip:"Refills are free."},
