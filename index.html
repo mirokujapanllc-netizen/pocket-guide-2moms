@@ -140,7 +140,7 @@ footer b{color:var(--fg);font-family:var(--display)}
     </header>
     <div class="tiles" style="margin-top:16px">
       <button type="button" class="tile" data-go="breakfast" style="--c:var(--morning)"><span class="e">🍳</span><b>Breakfast</b><small>Skip the hotel breakfast. 9 chains under $6.</small></button>
-      <button type="button" class="tile" data-go="lunch" style="--c:var(--noon)"><span class="e">🍱</span><b>Lunch</b><small>Secret lunch menus. 6 chains under $6.</small></button>
+      <button type="button" class="tile" data-go="lunch" style="--c:var(--noon)"><span class="e">🍱</span><b>Lunch</b><small>Secret lunch menus. 9 chains from $3.</small></button>
       <button type="button" class="tile" data-go="dinner" style="--c:var(--night)"><span class="e">🍜</span><b>Dinner</b><small>Cheap and cozy after a long day.</small></button>
       <button type="button" class="tile" data-go="talk" style="--c:var(--brave)"><span class="e">🗣</span><b>Talk</b><small>Shy, Lazy, or Brave? Japanese phrases.</small></button>
     </div>
@@ -234,15 +234,18 @@ const MEALS = {
   },
   lunch:{
     color:"var(--noon)", eyebrow:"Lunch · From our post “Secret lunch menus”",
-    title:"Secret lunch menus 🍱", lead:"They vanish after lunch. 6 chains, all under $6.",
+    title:"Secret lunch menus 🍱", lead:"They vanish after lunch. 9 chains, from $3.",
     note:"⏰ Most lunch deals are weekdays only. Go before 2pm to be safe! Tip: go around 11:30 or after 1pm to skip the office lunch rush.",
     shops:[
+      {ja:"くら寿司", en:"Kura Sushi", what:"“Kura Lunch”: mini tempura or eel rice bowl + miso soup or steamed egg custard (weekdays 11am–3pm)", price:"¥500", usd:"$3.18", tip:"Sushi place lunch for $3. We checked twice."},
       {ja:"サイゼリヤ", en:"Saizeriya", what:"Spaghetti + salad lunch (weekdays until 3pm, free soup refills)", price:"¥500", usd:"$3.18", tip:"Free soup refills. We stayed 2 hours."},
       {ja:"松屋", en:"Matsuya", what:"Beef bowl lunch with miso soup + salad", price:"¥500", usd:"$3.18", tip:"Order from a machine. Zero eye contact."},
       {ja:"ガスト", en:"Gusto", what:"Daily lunch with rice + soup (soup refills free)", price:"¥500~", usd:"$3.18~", tip:"A new lunch every day. Unlike my cooking."},
       {ja:"マクドナルド", en:"McDonald's", what:"“Hiru-Mac” lunch sets, weekdays 10:30am–2pm", price:"¥600~", usd:"$3.82~", tip:"Big Mac set for ¥690. Yes, in Japan."},
       {ja:"丸亀製麺", en:"Marugame Udon", what:"Udon + shrimp tempura", price:"¥640", usd:"$4.08", tip:"One tempura. Okay, maybe three."},
-      {ja:"餃子の王将", en:"Gyoza no Ohsho", what:"Ramen + fried rice + 2 fried chicken (weekdays until 5pm)", price:"¥790", usd:"$5.03", tip:"Three dishes. One nap."}
+      {ja:"餃子の王将", en:"Gyoza no Ohsho", what:"Ramen + fried rice + 2 fried chicken (weekdays until 5pm)", price:"¥790", usd:"$5.03", tip:"Three dishes. One nap."},
+      {ja:"バーミヤン", en:"Bamiyan", what:"Chinese rice bowl. Weekday lunch: free extra rice + soup bar", price:"¥824", usd:"$5.25", tip:"Extra rice? Free. Soup bar? Included."},
+      {ja:"デニーズ", en:"Denny's", what:"Daily one-plate lunch with drink bar (weekdays)", price:"¥990", usd:"$6.31", tip:"Not the Denny's you know back home."}
     ]
   },
   dinner:{
