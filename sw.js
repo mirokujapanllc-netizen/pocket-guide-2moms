@@ -1,5 +1,5 @@
 /* Offline support: change VERSION whenever the app is updated */
-const VERSION = "pocket-guide-2026-11-11i";
+const VERSION = "pocket-guide-2026-11-12a";
 const SHELL = ["./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png", "./apple-touch-icon.png"];
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(VERSION).then(c => c.addAll(SHELL)).then(() => self.skipWaiting()));
