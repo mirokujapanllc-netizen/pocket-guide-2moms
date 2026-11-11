@@ -124,6 +124,19 @@ footer b{color:var(--fg);font-family:var(--display)}
 .sheet .row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
 .sheet .btn{background:#f7f1e8;color:#1d1712;border-color:#e8dccb}
 .sheet .btn.play{background:#2f7f8f;border-color:#2f7f8f;color:#fff}
+/* cheat sheets */
+.sgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;list-style:none;margin:0;padding:0}
+.sitem{font:inherit;color:inherit;text-align:left;cursor:pointer;border:1px solid var(--line);background:var(--surface);border-radius:14px;padding:8px;display:flex;flex-direction:column;gap:6px;width:100%}
+.sitem img{width:100%;aspect-ratio:3/4;object-fit:cover;object-position:top;border-radius:8px;background:var(--brown-soft)}
+.sitem b{font-family:var(--display);font-size:14px;line-height:1.25}
+.sitem small{font-size:12px;color:var(--muted)}
+.sitem:focus-visible{outline:3px solid var(--brown);outline-offset:2px}
+.viewer{position:fixed;inset:0;z-index:55;background:#1d1712;display:flex;flex-direction:column}
+.vbar{display:flex;gap:8px;align-items:center;justify-content:space-between;padding:calc(10px + env(safe-area-inset-top,0px)) max(12px,env(safe-area-inset-right,0px)) 10px max(12px,env(safe-area-inset-left,0px));background:#1d1712;color:#f7f1e8}
+.vbar b{font-family:var(--display);font-size:15px;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.vbar button{font:inherit;font-size:15px;font-weight:700;border:1px solid #3e3329;background:#2a221b;color:#f7f1e8;border-radius:999px;padding:7px 12px;cursor:pointer;min-width:42px}
+.vscroll{flex:1;overflow:auto;-webkit-overflow-scrolling:touch;padding-bottom:env(safe-area-inset-bottom,0px)}
+.vscroll img{display:block;width:100%;height:auto;margin:0 auto}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
@@ -143,6 +156,7 @@ footer b{color:var(--fg);font-family:var(--display)}
       <button type="button" class="tile" data-go="lunch" style="--c:var(--noon)"><span class="e">🍱</span><b>Lunch</b><small>Secret lunch menus. 9 chains from $3.</small></button>
       <button type="button" class="tile" data-go="dinner" style="--c:var(--night)"><span class="e">🍜</span><b>Dinner</b><small>Cheap and cozy after a long day.</small></button>
       <button type="button" class="tile" data-go="talk" style="--c:var(--brave)"><span class="e">🗣</span><b>Talk</b><small>Shy, Lazy, or Brave? Japanese phrases.</small></button>
+      <button type="button" class="tile wide" data-go="sheets" style="--c:var(--brown)"><span class="e">📋</span><span><b>Cheat sheets</b><br><small>All our lists from Instagram. Tap to zoom in!</small></span></button>
     </div>
     <p class="note" style="margin-top:12px">📋 <b>How to find a shop:</b> tap <b>Copy Japanese name</b>, paste it into Google Maps, and you'll see the nearest one. English names don't always show up!</p>
     <div class="teaser" style="margin-top:12px">
@@ -158,6 +172,17 @@ footer b{color:var(--fg);font-family:var(--display)}
     </div>
   </section>
 
+  <!-- ===== CHEAT SHEETS VIEW ===== -->
+  <section id="v-sheets" hidden>
+    <button type="button" class="back" data-go="home">← Home</button>
+    <header style="margin-top:12px">
+      <div class="eyebrow">Cheat sheets · From our Instagram posts</div>
+      <h2>Zoom in on every list 🔍</h2>
+      <p class="lead">Can't read the tiny text in a Reel? Tap a sheet, then use ＋ to zoom in.</p>
+    </header>
+    <ul class="sgrid" id="sheetGrid" style="margin-top:12px"></ul>
+  </section>
+
   <!-- ===== MEAL VIEW (breakfast / lunch / dinner) ===== -->
   <section id="v-meal" hidden>
     <button type="button" class="back" data-go="home">← Home</button>
@@ -168,6 +193,7 @@ footer b{color:var(--fg);font-family:var(--display)}
     </header>
     <p class="note" id="mealNote" style="margin-top:12px"></p>
     <ol class="list" id="shopList" style="margin-top:12px"></ol>
+    <button type="button" class="btn copy" id="mealSheet" style="margin-top:14px;align-self:flex-start">📋 See the full list image (zoom in)</button>
     <button type="button" class="btn play" id="mealTalk" style="margin-top:14px;align-self:flex-start">🗣 Phrases for ordering →</button>
   </section>
 
@@ -210,6 +236,15 @@ footer b{color:var(--fg);font-family:var(--display)}
     <button type="button" class="btn play" id="sheetPlay">▶ Play</button>
     <button type="button" class="btn" id="sheetThanks">ありがとうございます</button>
   </div>
+</div>
+<div class="viewer" id="viewer" hidden role="dialog" aria-modal="true" aria-label="Cheat sheet">
+  <div class="vbar">
+    <b id="vTitle"></b>
+    <button type="button" id="vOut" aria-label="Zoom out">－</button>
+    <button type="button" id="vIn" aria-label="Zoom in">＋</button>
+    <button type="button" id="vClose">✕</button>
+  </div>
+  <div class="vscroll" id="vScroll"><img id="vImg" alt=""></div>
 </div>
 <div class="toast" id="toast" hidden role="status" aria-live="polite"></div>
 
@@ -262,6 +297,23 @@ const MEALS = {
     ]
   }
 };
+/* ===== CHEAT SHEETS: newest first. file = img/<id>.jpg, thumbnail = img/<id>-thumb.jpg ===== */
+const SHEETS = [
+  {id:"lunch", title:"Secret lunch menus", note:"9 chains from $3", isNew:true},
+  {id:"restaurant-etiquette", title:"Japanese restaurant etiquette", note:"Just say \"Sumimasen!\"", isNew:true},
+  {id:"breakfast", title:"Skip the hotel breakfast", note:"9 chains under $6"},
+  {id:"toilet-types", title:"The sink is on the toilet?!", note:"5 Japanese toilets"},
+  {id:"vending-machines", title:"Red means hot", note:"Vending machines, explained"},
+  {id:"onsen-etiquette", title:"Japanese onsen etiquette", note:"No swimsuits. Really."},
+  {id:"onsen-cheatsheet", title:"Onsen cheat sheet", note:"Kanji signs + steps"},
+  {id:"hotel-freebies", title:"Don't pack these", note:"Your hotel has them for free"},
+  {id:"tattoo-onsen", title:"Got a tattoo?", note:"How to enjoy onsen"},
+  {id:"japanese-etiquette", title:"Japanese etiquette", note:"8 rules before you go"},
+  {id:"toilet-etiquette", title:"Japanese toilet etiquette", note:"6 rules"},
+  {id:"toilet-cheatsheet", title:"Toilet button cheat sheet", note:"Match the kanji"},
+  {id:"trash-cans", title:"No trash cans in Japan?!", note:"What Japanese parents do"}
+];
+const MEAL_SHEET = {breakfast:"breakfast", lunch:"lunch"};
 /* ===== PHRASES: edit this list to update the Talk section =====
    new:true  → shows a NEW badge and appears under "✨ New"
    post:"…"  → shows which Instagram post it came from */
@@ -321,6 +373,8 @@ function go(view){
   document.getElementById("v-home").hidden = view!=="home";
   document.getElementById("v-meal").hidden = !meal;
   document.getElementById("v-talk").hidden = view!=="talk";
+  document.getElementById("v-sheets").hidden = view!=="sheets";
+  if(view==="sheets") renderSheets();
   if(meal) renderMeal(view);
   if(view==="talk") render();
   try{ history.replaceState(null,"","#"+view); }catch(e){}
@@ -355,6 +409,35 @@ function copyText(text){
   }catch(e){ fallback(); }
 }
 
+/* ---------- cheat sheets ---------- */
+function renderSheets(){
+  const g=document.getElementById("sheetGrid"); g.innerHTML="";
+  SHEETS.forEach(s=>{
+    const li=document.createElement("li");
+    const b=document.createElement("button"); b.type="button"; b.className="sitem";
+    b.innerHTML=`<img loading="lazy" alt=""><b></b><small></small>`;
+    b.querySelector("img").src="img/"+s.id+"-thumb.jpg";
+    b.querySelector("b").textContent=(s.isNew?"✨ NEW · ":"")+s.title;
+    b.querySelector("small").textContent=s.note;
+    b.onclick=()=>openViewer(s.id);
+    li.appendChild(b); g.appendChild(li);
+  });
+}
+let vZoom=1;
+function setZoom(z){ vZoom=Math.max(1,Math.min(3,z)); document.getElementById("vImg").style.width=(vZoom*100)+"%"; }
+function openViewer(id){
+  const s=SHEETS.find(x=>x.id===id); if(!s) return;
+  document.getElementById("vTitle").textContent=s.title;
+  const img=document.getElementById("vImg"); img.src="img/"+s.id+".jpg"; img.alt=s.title;
+  setZoom(1); document.getElementById("viewer").hidden=false; document.getElementById("vScroll").scrollTo(0,0);
+  document.getElementById("vClose").focus();
+}
+function closeViewer(){ document.getElementById("viewer").hidden=true; }
+document.getElementById("vClose").onclick=closeViewer;
+document.getElementById("vIn").onclick=()=>setZoom(vZoom+1);
+document.getElementById("vOut").onclick=()=>setZoom(vZoom-1);
+document.addEventListener("keydown", e=>{ if(e.key==="Escape") closeViewer(); });
+
 /* ---------- meal view ---------- */
 function renderMeal(key){
   const m = MEALS[key];
@@ -362,6 +445,7 @@ function renderMeal(key){
   document.getElementById("mealTitle").textContent = m.title;
   document.getElementById("mealLead").textContent = m.lead;
   document.getElementById("mealNote").textContent = m.note;
+  const ms=document.getElementById("mealSheet"); ms.hidden=!MEAL_SHEET[key]; ms.onclick=()=>openViewer(MEAL_SHEET[key]);
   const list = document.getElementById("shopList"); list.innerHTML = "";
   m.shops.forEach(s=>{
     const li = document.createElement("li"); li.className = "shop"; li.style.setProperty("--c", m.color);
@@ -513,7 +597,7 @@ document.getElementById("search").addEventListener("input", e=>{ query=e.target.
 
 /* start */
 const start = (location.hash||"").slice(1);
-go(MEALS[start] || start==="talk" ? start : "home");
+go(MEALS[start] || start==="talk" || start==="sheets" ? start : "home");
 
 /* offline support */
 if("serviceWorker" in navigator){ window.addEventListener("load", ()=>{ navigator.serviceWorker.register("sw.js").catch(()=>{}); }); }
