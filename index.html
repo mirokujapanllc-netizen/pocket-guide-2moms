@@ -1,0 +1,519 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Japan Pocket Guide</title>
+<meta name="description" content="Cheap eats you'll find everywhere in Japan, and Japanese that actually works. By 2 Japanese moms.">
+<meta name="theme-color" content="#F7F1E8">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Pocket Guide">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Zen+Maru+Gothic:wght@500;700;900&display=swap">
+<style>
+/* Layout: phone-first pocket guide. Home = 4 big tiles (Breakfast / Lunch / Dinner / Talk) + paid teaser.
+   Meal views = chain cards with Japanese name copy + Maps. Talk view = Shy/Lazy/Brave phrase deck with search. */
+:root{
+  --bg:#f7f1e8; --surface:#fffdf9; --fg:#2b2018; --muted:#7a6755; --line:#e8dccb;
+  --brown:#a86b32; --brown-soft:#f3e6d6; --red:#b3262b; --red-soft:#fbe9e7;
+  --shy:#c2577a; --lazy:#2f7f8f; --brave:#b3262b;
+  --morning:#d98b2b; --noon:#2f7f8f; --night:#5b4a8a;
+  --display:"Bricolage Grotesque","Zen Maru Gothic",system-ui,sans-serif;
+  --jp:"Zen Maru Gothic","Hiragino Maru Gothic ProN","Hiragino Sans","Yu Gothic",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#1e1812; --surface:#2a221b; --fg:#f5ece1; --muted:#bba893; --line:#3e3329;
+  --brown:#d69a5e; --brown-soft:#3a2c1f; --red:#e0605e; --red-soft:#3b2120;
+  --shy:#e383a3; --lazy:#5fb8c8; --brave:#e0605e;
+  --morning:#f0a94d; --noon:#5fb8c8; --night:#a593d6; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#1e1812; --surface:#2a221b; --fg:#f5ece1; --muted:#bba893; --line:#3e3329;
+  --brown:#d69a5e; --brown-soft:#3a2c1f; --red:#e0605e; --red-soft:#3b2120;
+  --shy:#e383a3; --lazy:#5fb8c8; --brave:#e0605e;
+  --morning:#f0a94d; --noon:#5fb8c8; --night:#a593d6; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--jp);font-size:15px;line-height:1.55;margin:0}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.wrap{max-width:680px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:22px 56px;display:flex;flex-direction:column;gap:18px}
+header{display:flex;flex-direction:column;gap:6px}
+.eyebrow{font-family:var(--display);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--brown);font-weight:800}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(30px,8vw,44px);line-height:1.02;margin:0;text-wrap:balance}
+h1 .s{color:var(--shy)} h1 .l{color:var(--lazy)} h1 .b{color:var(--brave)}
+h2{font-family:var(--display);font-weight:800;font-size:clamp(26px,7vw,36px);line-height:1.05;margin:0}
+.lead{margin:0;color:var(--muted);max-width:60ch}
+[hidden]{display:none!important}
+/* home */
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tile{font:inherit;color:inherit;text-align:left;cursor:pointer;border:1px solid var(--line);background:var(--surface);border-radius:20px;padding:16px 14px;display:flex;flex-direction:column;gap:4px;min-height:132px;position:relative;overflow:hidden}
+.tile .e{font-size:32px;line-height:1}
+.tile b{font-family:var(--display);font-size:20px;font-weight:800;margin-top:6px}
+.tile small{font-size:12.5px;color:var(--muted);line-height:1.35}
+.tile::after{content:"";position:absolute;inset:auto 0 0;height:5px;background:var(--c,var(--brown))}
+.tile.wide{grid-column:1/-1;min-height:0;flex-direction:row;align-items:center;gap:14px}
+.tile.wide b{margin-top:0}
+.tile:focus-visible{outline:3px solid var(--brown);outline-offset:2px}
+.teaser{border-radius:20px;padding:16px;background:var(--fg);color:var(--bg);display:flex;flex-direction:column;gap:8px}
+.teaser .tag{font-family:var(--display);font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:800;color:#f2b37a}
+.teaser b{font-family:var(--display);font-size:22px;line-height:1.1}
+.teaser ul{margin:0;padding-left:18px;font-size:14px;display:flex;flex-direction:column;gap:2px}
+.teaser p{margin:0;font-size:13.5px;opacity:.9}
+/* view header */
+.back{font:inherit;font-size:14px;font-weight:700;cursor:pointer;border:1px solid var(--line);background:var(--surface);color:var(--fg);padding:7px 14px;border-radius:999px;align-self:flex-start}
+.note{margin:0;font-size:13px;padding:10px 12px;border-radius:12px;background:var(--brown-soft)}
+/* chain cards */
+.shop{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:4px;border-left:5px solid var(--c,var(--brown))}
+.shop .top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+.shop .jn{font-size:26px;font-weight:900;line-height:1.2;margin:0}
+.shop .en{font-family:var(--display);font-size:15px;font-weight:600;color:var(--muted);margin:0}
+.shop .what{margin:0;font-size:15px}
+.shop .price{font-family:var(--display);font-weight:800;font-size:18px;color:var(--red);margin:0}
+.shop .price small{font-family:var(--jp);font-weight:500;font-size:13px;color:var(--muted)}
+.shop .tip{margin:2px 0 0}
+/* phrase deck (talk) */
+.modes{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:8px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.mode{font:inherit;cursor:pointer;border:2px solid var(--line);background:var(--surface);color:var(--fg);border-radius:16px;padding:10px 6px;display:flex;flex-direction:column;align-items:center;gap:2px;text-align:center}
+.mode b{font-family:var(--display);font-size:15px;letter-spacing:.04em}
+.mode small{font-size:11px;color:var(--muted);line-height:1.3}
+.mode .e{font-size:22px;line-height:1}
+.mode[aria-pressed="true"][data-m="shy"]{border-color:var(--shy);background:color-mix(in srgb,var(--shy) 14%,var(--surface))}
+.mode[aria-pressed="true"][data-m="lazy"]{border-color:var(--lazy);background:color-mix(in srgb,var(--lazy) 14%,var(--surface))}
+.mode[aria-pressed="true"][data-m="brave"]{border-color:var(--brave);background:color-mix(in srgb,var(--brave) 12%,var(--surface))}
+.howto{margin:0;font-size:13px;padding:10px 12px;border-radius:12px;background:var(--brown-soft);color:var(--fg)}
+.search{font:inherit;font-size:16px;width:100%;padding:11px 14px;border-radius:14px;border:1px solid var(--line);background:var(--surface);color:var(--fg)}
+.search:focus-visible{outline:3px solid var(--brown);outline-offset:1px}
+.chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{font:inherit;font-size:13px;white-space:nowrap;cursor:pointer;border:1px solid var(--line);background:var(--surface);color:var(--fg);padding:6px 12px;border-radius:999px}
+.chip[aria-pressed="true"]{background:var(--brown);border-color:var(--brown);color:#fff}
+.list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.empty{color:var(--muted);font-size:14px;margin:0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px 14px 12px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.card.playing{border-color:var(--lazy);box-shadow:0 0 0 3px color-mix(in srgb,var(--lazy) 25%,transparent)}
+.cat{font-family:var(--display);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--brown);font-weight:800;display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.new{background:var(--red);color:#fff;border-radius:999px;padding:1px 8px;letter-spacing:.06em}
+.from{color:var(--muted);text-transform:none;letter-spacing:0;font-weight:600}
+.ja{font-size:24px;font-weight:700;line-height:1.35;margin:0;word-break:keep-all;overflow-wrap:anywhere}
+.card .en{margin:0;font-size:15px;color:var(--fg)}
+.ro{margin:0;font-size:14px;color:var(--muted);font-style:italic}
+.say{margin:0;font-family:var(--display);font-size:16px;color:var(--brave);font-weight:600;letter-spacing:.01em}
+.tip{margin:0;font-size:13px;background:var(--red-soft);padding:7px 10px;border-radius:10px}
+.ctrl{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+.btn{font:inherit;font-size:14px;font-weight:700;cursor:pointer;border:1px solid var(--line);background:var(--bg);color:var(--fg);padding:7px 14px;border-radius:999px;text-decoration:none;display:inline-flex;align-items:center;gap:4px}
+.btn.show{background:var(--shy);border-color:var(--shy);color:#fff}
+.btn.play{background:var(--lazy);border-color:var(--lazy);color:#fff}
+.btn.copy{background:var(--brown);border-color:var(--brown);color:#fff}
+.btn:focus-visible,.chip:focus-visible,.mode:focus-visible,.al:focus-visible,.back:focus-visible{outline:3px solid var(--brown);outline-offset:2px}
+.allergy{display:flex;flex-wrap:wrap;gap:6px}
+.al{font:inherit;font-size:13px;cursor:pointer;border:1px solid var(--line);background:var(--bg);color:var(--fg);padding:5px 10px;border-radius:999px}
+.al[aria-pressed="true"]{background:var(--red);border-color:var(--red);color:#fff}
+.warn{font-size:13px;color:var(--red);font-weight:700;margin:0}
+footer{display:flex;flex-direction:column;gap:4px;padding-top:10px;border-top:1px dashed var(--line);font-size:13px;color:var(--muted)}
+footer b{color:var(--fg);font-family:var(--display)}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:10px 16px;border-radius:999px;font-size:14px;font-weight:700;z-index:60;max-width:calc(100% - 32px);text-align:center}
+/* fullscreen show sheet */
+.sheet{position:fixed;inset:0;z-index:50;background:#fffdf9;color:#1d1712;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:18px;text-align:center;padding:calc(24px + env(safe-area-inset-top,0px)) max(20px,env(safe-area-inset-right,0px)) calc(24px + env(safe-area-inset-bottom,0px)) max(20px,env(safe-area-inset-left,0px))}
+.sheet .please{font-size:15px;color:#7a6755;margin:0}
+.sheet .big{font-family:var(--jp);font-weight:900;font-size:clamp(34px,11vw,72px);line-height:1.3;margin:0;word-break:keep-all;overflow-wrap:anywhere;max-width:16ch}
+.sheet .small{font-size:16px;color:#7a6755;margin:0}
+.sheet .close{position:absolute;top:calc(12px + env(safe-area-inset-top,0px));right:calc(12px + env(safe-area-inset-right,0px));font:inherit;font-size:15px;font-weight:700;border:1px solid #e8dccb;background:#f7f1e8;color:#1d1712;border-radius:999px;padding:8px 14px;cursor:pointer}
+.sheet .row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.sheet .btn{background:#f7f1e8;color:#1d1712;border-color:#e8dccb}
+.sheet .btn.play{background:#2f7f8f;border-color:#2f7f8f;color:#fff}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- ===== HOME ===== -->
+  <section id="v-home">
+    <header>
+      <div class="eyebrow">Japan Survival Guide · Free from 2 Japanese moms</div>
+      <h1>Your Japan Pocket Guide</h1>
+      <p class="lead">Cheap eats you'll find everywhere, and Japanese that actually works. Tap a section.</p>
+    </header>
+    <div class="tiles" style="margin-top:16px">
+      <button type="button" class="tile" data-go="breakfast" style="--c:var(--morning)"><span class="e">🍳</span><b>Breakfast</b><small>Skip the hotel breakfast. 9 chains under $6.</small></button>
+      <button type="button" class="tile" data-go="lunch" style="--c:var(--noon)"><span class="e">🍱</span><b>Lunch</b><small>Secret lunch menus. 6 chains under $6.</small></button>
+      <button type="button" class="tile" data-go="dinner" style="--c:var(--night)"><span class="e">🍜</span><b>Dinner</b><small>Cheap and cozy after a long day.</small></button>
+      <button type="button" class="tile" data-go="talk" style="--c:var(--brave)"><span class="e">🗣</span><b>Talk</b><small>Shy, Lazy, or Brave? Japanese phrases.</small></button>
+    </div>
+    <p class="note" style="margin-top:12px">📋 <b>How to find a shop:</b> tap <b>Copy Japanese name</b>, paste it into Google Maps, and you'll see the nearest one. English names don't always show up!</p>
+    <div class="teaser" style="margin-top:12px">
+      <span class="tag">🔒 Coming soon · Paid version</span>
+      <b>Japan Trip Planner</b>
+      <ul>
+        <li>Local spots chains can't beat, picked by Japanese moms</li>
+        <li>Tattoo-friendly onsen, kid-friendly places</li>
+        <li>Works offline on your long flight</li>
+        <li>New places added every Monday</li>
+      </ul>
+      <p>Want it first? DM us <b>"PLANNER"</b> on Instagram and we'll tell you when it's ready.</p>
+    </div>
+  </section>
+
+  <!-- ===== MEAL VIEW (breakfast / lunch / dinner) ===== -->
+  <section id="v-meal" hidden>
+    <button type="button" class="back" data-go="home">← Home</button>
+    <header style="margin-top:12px">
+      <div class="eyebrow" id="mealEyebrow"></div>
+      <h2 id="mealTitle"></h2>
+      <p class="lead" id="mealLead"></p>
+    </header>
+    <p class="note" id="mealNote" style="margin-top:12px"></p>
+    <ol class="list" id="shopList" style="margin-top:12px"></ol>
+    <button type="button" class="btn play" id="mealTalk" style="margin-top:14px;align-self:flex-start">🗣 Phrases for ordering →</button>
+  </section>
+
+  <!-- ===== TALK VIEW ===== -->
+  <section id="v-talk" hidden>
+    <button type="button" class="back" data-go="home">← Home</button>
+    <header style="margin-top:12px">
+      <div class="eyebrow">Talk · Japanese phrases</div>
+      <h1>Are you <span class="s">Shy</span>, <span class="l">Lazy</span>, or <span class="b">Brave</span>?</h1>
+      <p class="lead">Pick your mode. Missing a phrase? Ask us and we'll add it!</p>
+    </header>
+    <div class="modes" role="group" aria-label="Mode" style="margin-top:12px">
+      <button type="button" class="mode" data-m="shy" aria-pressed="false"><span class="e">😳</span><b>SHY</b><small>Just point</small></button>
+      <button type="button" class="mode" data-m="lazy" aria-pressed="true"><span class="e">📱</span><b>LAZY</b><small>Let your phone talk</small></button>
+      <button type="button" class="mode" data-m="brave" aria-pressed="false"><span class="e">💪</span><b>BRAVE</b><small>Sound like a local</small></button>
+    </div>
+    <p class="howto" id="howto" style="margin-top:10px"></p>
+    <p class="warn" id="novoice" hidden>Your phone has no Japanese voice yet, so LAZY mode may sound odd. iPhone: Settings › Accessibility › Spoken Content › Voices › Japanese. Or use SHY mode and show the screen!</p>
+    <input class="search" id="search" type="search" placeholder="🔍 Search: water, lunch, toilet…" aria-label="Search phrases" style="margin-top:12px">
+    <div class="chips" id="chips" role="group" aria-label="Category" style="margin-top:10px"></div>
+    <ol class="list" id="list" style="margin-top:10px"></ol>
+  </section>
+
+  <footer>
+    <span><b>@your_friends.japan</b> · Japan Survival Guide by 2 Japanese moms 🇯🇵</span>
+    <span>💬 Need a phrase or a place that's not here? DM us or comment on our posts, and we'll add it!</span>
+    <span>Follow us so you don't miss updates. We add new stuff with every post!</span>
+    <span>📲 Keep it handy: iPhone Safari › Share › Add to Home Screen. Android Chrome › ⋮ › Add to Home screen.</span>
+    <span>Prices: tax included, checked November 2026. They vary by location and season.</span>
+    <span>Last updated: November 11, 2026</span>
+  </footer>
+</div>
+
+<div class="sheet" id="sheet" hidden role="dialog" aria-modal="true" aria-label="Show this to the staff">
+  <button type="button" class="close" id="sheetClose">✕ Close</button>
+  <p class="please">こちらをお読みください 🙏<br>(Please read this)</p>
+  <p class="big" id="sheetJa"></p>
+  <p class="small" id="sheetEn"></p>
+  <div class="row">
+    <button type="button" class="btn play" id="sheetPlay">▶ Play</button>
+    <button type="button" class="btn" id="sheetThanks">ありがとうございます</button>
+  </div>
+</div>
+<div class="toast" id="toast" hidden role="status" aria-live="polite"></div>
+
+<script>
+/* ===== MEALS: edit these lists to update the shop guides ===== */
+const MEALS = {
+  breakfast:{
+    color:"var(--morning)", eyebrow:"Breakfast · From our post “Skip the hotel breakfast”",
+    title:"Skip the hotel breakfast 🍳", lead:"9 cheap chain breakfasts in Japan. All under $6.",
+    note:"⏰ Many shops stop breakfast at 10:30 or 11am. Don't sleep in!",
+    shops:[
+      {ja:"なか卯", en:"Nakau", what:"Egg & sausage breakfast set", price:"¥440~", usd:"$2.80~", tip:"Breakfast at 5am? Nakau is ready."},
+      {ja:"すき家", en:"Sukiya", what:"Mixed breakfast set", price:"¥300~", usd:"$1.91~", tip:"Natto included. Courage not included."},
+      {ja:"松屋", en:"Matsuya", what:"Beef plate breakfast set", price:"¥400", usd:"$2.55", tip:"Miso soup included. Always."},
+      {ja:"吉野家", en:"Yoshinoya", what:"Ham & egg with beef set", price:"¥567", usd:"$3.61", tip:"Beef for breakfast. Japan said yes."},
+      {ja:"マクドナルド", en:"McDonald's", what:"Egg McMuffin set", price:"¥460~", usd:"$2.93~", tip:"Order a large. It's still cute."},
+      {ja:"カフェ・ベローチェ", en:"Caffè Veloce", what:"Morning toast set", price:"¥480~", usd:"$3.06~", tip:"Toast + coffee for less than a latte back home."},
+      {ja:"ガスト", en:"Gusto", what:"Fried egg & bacon sausage set, drink bar included", price:"¥850~", usd:"$5.41~", tip:"Unlimited refills. Stay till the kids get bored."},
+      {ja:"ドトールコーヒー", en:"Doutor", what:"Ham & egg salad sandwich set", price:"¥500~", usd:"$3.18~", tip:"Japanese office workers' secret fuel."},
+      {ja:"コメダ珈琲店", en:"Komeda's Coffee", what:"Toast & egg morning service (free with any drink until 11am)", price:"¥450~", usd:"$2.87~ (drink price only)", tip:"Buy coffee, get toast free. Yes, really."}
+    ]
+  },
+  lunch:{
+    color:"var(--noon)", eyebrow:"Lunch · From our post “Secret lunch menus”",
+    title:"Secret lunch menus 🍱", lead:"They vanish after lunch. 6 chains, all under $6.",
+    note:"⏰ Most lunch deals are weekdays only. Go before 2pm to be safe! Tip: go around 11:30 or after 1pm to skip the office lunch rush.",
+    shops:[
+      {ja:"サイゼリヤ", en:"Saizeriya", what:"Spaghetti + salad lunch (weekdays until 3pm, free soup refills)", price:"¥500", usd:"$3.18", tip:"Free soup refills. We stayed 2 hours."},
+      {ja:"松屋", en:"Matsuya", what:"Beef bowl lunch with miso soup + salad", price:"¥500", usd:"$3.18", tip:"Order from a machine. Zero eye contact."},
+      {ja:"ガスト", en:"Gusto", what:"Daily lunch with rice + soup (soup refills free)", price:"¥500~", usd:"$3.18~", tip:"A new lunch every day. Unlike my cooking."},
+      {ja:"マクドナルド", en:"McDonald's", what:"“Hiru-Mac” lunch sets, weekdays 10:30am–2pm", price:"¥600~", usd:"$3.82~", tip:"Big Mac set for ¥690. Yes, in Japan."},
+      {ja:"丸亀製麺", en:"Marugame Udon", what:"Udon + shrimp tempura", price:"¥640", usd:"$4.08", tip:"One tempura. Okay, maybe three."},
+      {ja:"餃子の王将", en:"Gyoza no Ohsho", what:"Ramen + fried rice + 2 fried chicken (weekdays until 5pm)", price:"¥790", usd:"$5.03", tip:"Three dishes. One nap."}
+    ]
+  },
+  dinner:{
+    color:"var(--night)", eyebrow:"Dinner · Our dinner post is coming soon!",
+    title:"Cheap dinner after a long day 🍜", lead:"Cozy chains you'll find almost everywhere.",
+    note:"💴 Dinner prices coming with our dinner post. Check the menu at the shop for now.",
+    shops:[
+      {ja:"吉野家", en:"Yoshinoya", what:"Beef bowls and set meals. Many shops open late.", tip:"Too tired to choose? Beef bowl. Done."},
+      {ja:"サイゼリヤ", en:"Saizeriya", what:"Cheap Italian. Wine is cheap too.", tip:"Date night on a budget. We won't judge."},
+      {ja:"餃子の王将", en:"Gyoza no Ohsho", what:"Gyoza, ramen, fried rice. Beer goes well.", tip:"Gyoza + beer = the official end of a long day."},
+      {ja:"鳥貴族", en:"Torikizoku", what:"Yakitori pub. Every item is the same price.", tip:"Your first izakaya? Start here. Zero menu math."},
+      {ja:"大戸屋", en:"Ootoya", what:"Japanese home-style set meals.", tip:"Tastes like a Japanese mom's cooking. Almost as good as ours."},
+      {ja:"やよい軒", en:"Yayoiken", what:"Set meals. Free rice refills at many shops.", tip:"Rice refill? FREE. My diet? Gone."}
+    ]
+  }
+};
+/* ===== PHRASES: edit this list to update the Talk section =====
+   new:true  → shows a NEW badge and appears under "✨ New"
+   post:"…"  → shows which Instagram post it came from */
+const CATS = [
+  ["all","All"],["new","✨ New"],["food","🍜 Restaurant"],["kids","👶 With kids"],["place","🚻 Toilet & places"],
+  ["onsen","♨️ Onsen"],["shop","🏪 Konbini & shops"],["help","🆘 Help"],["basic","🙏 Basics"]
+];
+const PHRASES = [
+  {c:"food", new:true, post:"Secret lunch menus", ja:"ランチセットはありますか？", ro:"Ranchi setto wa arimasu ka?", en:"Do you have a lunch set?", say:"ran-chee set-toh wah ah-ree-mas-ka", tip:"Lunch deals are often weekdays only."},
+  {c:"food", new:true, post:"Secret lunch menus", ja:"ランチはまだ大丈夫ですか？", ro:"Ranchi wa mada daijōbu desu ka?", en:"Can I still order lunch?", say:"ran-chee wah mah-dah dai-joh-boo des-ka", tip:"Many lunch deals end around 2 or 3pm."},
+  {c:"food", new:true, post:"Secret lunch menus", ja:"食券はどこで買いますか？", ro:"Shokken wa doko de kaimasu ka?", en:"Where do I buy a meal ticket?", say:"shok-ken wah doh-koh deh kai-mas-ka", tip:"Buy a ticket at the machine, then hand it to the staff."},
+  {c:"food", new:true, post:"Secret lunch menus", ja:"ごはん少なめでお願いします。", ro:"Gohan sukuname de onegaishimasu.", en:"Less rice, please.", say:"goh-hahn soo-koo-nah-meh deh oh-neh-guy-shee-mas", tip:"Japanese portions of rice can be BIG."},
+  {c:"food", new:true, post:"Secret lunch menus", ja:"大盛りにできますか？", ro:"Ōmori ni dekimasu ka?", en:"Can I get a large size?", say:"oh-moh-ree nee deh-kee-mas-ka", tip:"Some shops do it for free, some charge a little. Ask!"},
+  {c:"food", new:true, post:"Secret lunch menus", ja:"別々に払えますか？", ro:"Betsubetsu ni haraemasu ka?", en:"Can we pay separately?", say:"bet-soo-bet-soo nee hah-rah-eh-mas-ka", tip:""},
+  {c:"food", ja:"すみません！", ro:"Sumimasen!", en:"Excuse me! (to call the staff)", say:"soo-mee-mah-sen", tip:"Raise your hand a little. Too shy? Stare, catch their eye, hand up. FAST."},
+  {c:"food", ja:"お水をください。", ro:"Omizu o kudasai.", en:"Water, please.", say:"oh-mee-zoo oh koo-dah-sai", tip:"Some places serve green tea. Water is free too, just ask!"},
+  {c:"food", ja:"お水のおかわりをください。", ro:"Omizu no okawari o kudasai.", en:"More water, please.", say:"oh-mee-zoo no oh-kah-wah-ree oh koo-dah-sai", tip:"Refills are free."},
+  {c:"food", ja:"これをください。", ro:"Kore o kudasai.", en:"This one, please. (point at the menu)", say:"koh-reh oh koo-dah-sai", tip:"Point at the photo while you say it. Works everywhere."},
+  {c:"food", ja:"英語のメニューはありますか？", ro:"Eigo no menyū wa arimasu ka?", en:"Do you have an English menu?", say:"ay-go no meh-nyoo wah ah-ree-mas-ka", tip:"Many tablets switch to English too. Look for a flag icon."},
+  {c:"food", ja:"お会計をお願いします。", ro:"Okaikei o onegaishimasu.", en:"Check, please.", say:"oh-kai-kay oh oh-neh-guy-shee-mas", tip:"In many places the bill is already on your table. Take it to the register."},
+  {c:"food", ja:"持ち帰りできますか？", ro:"Mochikaeri dekimasu ka?", en:"Can I take it to go?", say:"moh-chee-kah-eh-ree deh-kee-mas-ka", tip:""},
+  {c:"food", ja:"おいしい！", ro:"Oishii!", en:"Delicious!", say:"oy-shee", tip:"Say it to the chef. Instant smile."},
+  {c:"kids", ja:"子ども用のフォークはありますか？", ro:"Kodomo-yō no fōku wa arimasu ka?", en:"Do you have a kids' fork?", say:"koh-doh-moh yoh no foh-koo wah ah-ree-mas-ka", tip:"Grown-ups can ask for forks too. We won't tell."},
+  {c:"kids", ja:"子ども用のいすはありますか？", ro:"Kodomo-yō no isu wa arimasu ka?", en:"Do you have a high chair?", say:"koh-doh-moh yoh no ee-soo wah ah-ree-mas-ka", tip:""},
+  {c:"kids", ja:"おむつを替える場所はありますか？", ro:"Omutsu o kaeru basho wa arimasu ka?", en:"Where can I change a diaper?", say:"oh-moo-tsoo oh kah-eh-roo bah-shoh wah ah-ree-mas-ka", tip:"Department stores and big stations usually have baby rooms."},
+  {c:"kids", ja:"授乳室はありますか？", ro:"Junyū-shitsu wa arimasu ka?", en:"Is there a nursing room?", say:"joo-nyoo shee-tsoo wah ah-ree-mas-ka", tip:""},
+  {c:"place", ja:"トイレはどこですか？", ro:"Toire wa doko desu ka?", en:"Where is the restroom?", say:"toy-reh wah doh-koh des-ka", tip:"Toilets in Japan: free, clean, everywhere. Konbini: ask the staff first."},
+  {c:"place", ja:"多目的トイレはありますか？", ro:"Tamokuteki toire wa arimasu ka?", en:"Is there a multi-purpose restroom?", say:"tah-moh-koo-teh-kee toy-reh wah ah-ree-mas-ka", tip:"For wheelchairs, babies and anyone who needs it. Keep it quick."},
+  {c:"place", ja:"駅はどこですか？", ro:"Eki wa doko desu ka?", en:"Where is the station?", say:"eh-kee wah doh-koh des-ka", tip:""},
+  {c:"onsen", ja:"貸切風呂はありますか？", ro:"Kashikiri-buro wa arimasu ka?", en:"Do you have a private bath?", say:"kah-shee-kee-ree boo-roh wah ah-ree-mas-ka", tip:"Perfect for families, couples and tattoos."},
+  {c:"onsen", ja:"タトゥーは大丈夫ですか？", ro:"Tatū wa daijōbu desu ka?", en:"Are tattoos OK here?", say:"tah-too wah dai-joh-boo des-ka", tip:"Ask before you pay. Some places allow small tattoos covered with tape."},
+  {c:"onsen", ja:"タオルを借りられますか？", ro:"Taoru o kariraremasu ka?", en:"Can I rent a towel?", say:"tah-oh-roo oh kah-ree-rah-reh-mas-ka", tip:"Bring 2: a small one to wash, a big one to dry."},
+  {c:"shop", ja:"温めてください。", ro:"Atatamete kudasai.", en:"Please heat it up.", say:"ah-tah-tah-meh-teh koo-dah-sai", tip:"At konbini they'll often ask you. Bento, onigiri? Usually yes."},
+  {c:"shop", ja:"袋はいりません。", ro:"Fukuro wa irimasen.", en:"No bag, thanks.", say:"foo-koo-roh wah ee-ree-mah-sen", tip:"Bags cost a few yen in Japan."},
+  {c:"shop", ja:"カードで払えますか？", ro:"Kādo de haraemasu ka?", en:"Can I pay by card?", say:"kah-doh deh hah-rah-eh-mas-ka", tip:""},
+  {c:"shop", ja:"免税できますか？", ro:"Menzei dekimasu ka?", en:"Can I shop tax-free?", say:"men-zay deh-kee-mas-ka", tip:"Have your passport ready."},
+  {c:"help", ja:"写真を撮ってもいいですか？", ro:"Shashin o tottemo ii desu ka?", en:"May I take a photo?", say:"shah-sheen oh toht-teh-moh ee des-ka", tip:"Always ask before photographing people or inside shops."},
+  {c:"help", ja:"助けてください。", ro:"Tasukete kudasai.", en:"Please help me.", say:"tah-soo-keh-teh koo-dah-sai", tip:"Emergency in Japan: 119 (ambulance, fire), 110 (police)."},
+  {c:"help", ja:"具合が悪いです。", ro:"Guai ga warui desu.", en:"I feel sick.", say:"goo-ai gah wah-roo-ee des", tip:""},
+  {c:"basic", ja:"ありがとうございます。", ro:"Arigatō gozaimasu.", en:"Thank you very much.", say:"ah-ree-gah-toh goh-zai-mas", tip:"Add a small bow. Very Japanese."},
+  {c:"basic", ja:"大丈夫です。", ro:"Daijōbu desu.", en:"I'm OK / No thanks.", say:"dai-joh-boo des", tip:"A polite way to say no, with a little wave of the hand."}
+];
+const ALLERGENS = [["えび","shrimp"],["かに","crab"],["小麦","wheat"],["卵","egg"],["乳","milk"],["そば","buckwheat"],["落花生","peanut"],["くるみ","walnut"]];
+/* ===== end of editable lists ===== */
+
+const HOWTO = {
+  shy:"😳 SHY MODE: Don't say anything. Tap 👉 Show and hold up your phone. The staff will read it.",
+  lazy:"📱 LAZY MODE: Tap ▶ Play and your phone says it in Japanese. You just smile.",
+  brave:"💪 BRAVE MODE: Read the sound guide, tap 🐢 Slow, and try it yourself. Japanese people love it when you try!"
+};
+let mode = "lazy", cat = "all", query = "", allergySel = [];
+try{ const m = localStorage.getItem("yjf-mode"); if(m && HOWTO[m]) mode = m; }catch(e){}
+
+/* ---------- navigation ---------- */
+function go(view){
+  const meal = MEALS[view];
+  document.getElementById("v-home").hidden = view!=="home";
+  document.getElementById("v-meal").hidden = !meal;
+  document.getElementById("v-talk").hidden = view!=="talk";
+  if(meal) renderMeal(view);
+  if(view==="talk") render();
+  try{ history.replaceState(null,"","#"+view); }catch(e){}
+  window.scrollTo(0,0);
+}
+document.addEventListener("click", e=>{
+  const t = e.target.closest("[data-go]");
+  if(t){ go(t.dataset.go); }
+});
+
+/* ---------- toast + copy ---------- */
+let toastTimer = null;
+function toast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg; t.hidden = false;
+  clearTimeout(toastTimer); toastTimer = setTimeout(()=>t.hidden=true, 2600);
+}
+function copyText(text){
+  const done = ()=>toast("Copied “"+text+"”! Paste it into Google Maps 🗺");
+  const fallback = ()=>{
+    try{
+      const ta=document.createElement("textarea"); ta.value=text; ta.setAttribute("readonly","");
+      ta.style.position="fixed"; ta.style.opacity="0"; document.body.appendChild(ta);
+      ta.select(); ta.setSelectionRange(0, text.length);
+      const ok=document.execCommand("copy"); document.body.removeChild(ta);
+      ok ? done() : toast("Couldn't copy. Press and hold the name to copy it.");
+    }catch(e){ toast("Couldn't copy. Press and hold the name to copy it."); }
+  };
+  try{
+    if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(done, fallback); }
+    else fallback();
+  }catch(e){ fallback(); }
+}
+
+/* ---------- meal view ---------- */
+function renderMeal(key){
+  const m = MEALS[key];
+  document.getElementById("mealEyebrow").textContent = m.eyebrow;
+  document.getElementById("mealTitle").textContent = m.title;
+  document.getElementById("mealLead").textContent = m.lead;
+  document.getElementById("mealNote").textContent = m.note;
+  const list = document.getElementById("shopList"); list.innerHTML = "";
+  m.shops.forEach(s=>{
+    const li = document.createElement("li"); li.className = "shop"; li.style.setProperty("--c", m.color);
+    li.innerHTML = `<div class="top"><p class="jn"></p><p class="en"></p></div><p class="what"></p>`;
+    li.querySelector(".jn").textContent = s.ja;
+    li.querySelector(".en").textContent = s.en;
+    li.querySelector(".what").textContent = s.what;
+    if(s.price){
+      const p=document.createElement("p"); p.className="price";
+      p.innerHTML = `<span></span> <small></small>`;
+      p.querySelector("span").textContent = s.price;
+      p.querySelector("small").textContent = "≈ "+s.usd;
+      li.appendChild(p);
+    }
+    if(s.tip){ const t=document.createElement("p"); t.className="tip"; t.textContent="😂 "+s.tip; li.appendChild(t); }
+    const c=document.createElement("div"); c.className="ctrl";
+    const cp=document.createElement("button"); cp.type="button"; cp.className="btn copy"; cp.textContent="📋 Copy Japanese name";
+    cp.onclick=()=>copyText(s.ja); c.appendChild(cp);
+    const a=document.createElement("a"); a.className="btn"; a.textContent="🗺 Open Maps";
+    a.href="https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(s.ja);
+    a.target="_blank"; a.rel="noopener"; c.appendChild(a);
+    li.appendChild(c);
+    list.appendChild(li);
+  });
+}
+document.getElementById("mealTalk").onclick = ()=>{ cat="food"; query=""; document.getElementById("search").value=""; go("talk"); };
+
+/* ---------- speech ---------- */
+const synthOK = "speechSynthesis" in window;
+let jaVoice = null;
+function pickVoice(){
+  if(!synthOK) return;
+  const vs = speechSynthesis.getVoices().filter(v=>/^ja[-_]/i.test(v.lang));
+  const pref = /(Kyoko|O-ren|Otoya|Hattori|Google|Siri|Enhanced|Premium|Natural|Nanami)/i;
+  jaVoice = vs.sort((a,b)=>(pref.test(b.name)?1:0)-(pref.test(a.name)?1:0))[0] || null;
+  const all = speechSynthesis.getVoices();
+  document.getElementById("novoice").hidden = !(all.length && !jaVoice);
+}
+if(synthOK){ pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; }
+
+function speak(text, rate, card){
+  if(!synthOK){ document.getElementById("novoice").hidden = false; return; }
+  speechSynthesis.cancel();
+  document.querySelectorAll(".card.playing").forEach(e=>e.classList.remove("playing"));
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = "ja-JP"; u.rate = rate;
+  if(!jaVoice) pickVoice();
+  if(jaVoice) u.voice = jaVoice;
+  if(card){ card.classList.add("playing"); u.onend = u.onerror = ()=>card.classList.remove("playing"); }
+  speechSynthesis.speak(u);
+}
+
+/* ---------- show sheet ---------- */
+let wake = null;
+function showSheet(ja, en){
+  document.getElementById("sheetJa").textContent = ja;
+  document.getElementById("sheetEn").textContent = en;
+  document.getElementById("sheet").hidden = false;
+  document.getElementById("sheetClose").focus();
+  try{ navigator.wakeLock && navigator.wakeLock.request("screen").then(w=>wake=w).catch(()=>{}); }catch(e){}
+}
+function hideSheet(){
+  document.getElementById("sheet").hidden = true;
+  try{ wake && wake.release(); }catch(e){} wake = null;
+}
+document.getElementById("sheetClose").onclick = hideSheet;
+document.getElementById("sheetPlay").onclick = ()=>speak(document.getElementById("sheetJa").textContent, 0.9);
+document.getElementById("sheetThanks").onclick = ()=>speak("ありがとうございます", 0.9);
+document.addEventListener("keydown", e=>{ if(e.key==="Escape") hideSheet(); });
+
+/* ---------- talk view ---------- */
+function allergySentence(){
+  if(!allergySel.length) return {ja:"＿＿のアレルギーがあります。", en:"I'm allergic to ___. (tap below to choose)"};
+  const ja = allergySel.map(a=>a[0]).join("と") + "のアレルギーがあります。";
+  const en = "I'm allergic to " + allergySel.map(a=>a[1]).join(" and ") + ".";
+  return {ja, en};
+}
+
+function buttons(p, li){
+  const wrap = document.createElement("div"); wrap.className = "ctrl";
+  const add = (label, cls, fn)=>{ const b=document.createElement("button"); b.type="button"; b.className="btn "+cls; b.textContent=label; b.onclick=fn; wrap.appendChild(b); };
+  const get = ()=> p.allergy ? allergySentence() : p;
+  if(mode==="shy"){ add("👉 Show", "show", ()=>{ const s=get(); showSheet(s.ja, s.en); }); }
+  if(mode==="lazy"){ add("▶ Play", "play", ()=>speak(get().ja, 0.9, li)); add("👉 Show", "", ()=>{ const s=get(); showSheet(s.ja, s.en); }); }
+  if(mode==="brave"){ add("▶ Play", "play", ()=>speak(get().ja, 0.9, li)); add("🐢 Slow", "", ()=>speak(get().ja, 0.55, li)); }
+  return wrap;
+}
+
+function card(p){
+  const li = document.createElement("li"); li.className = "card";
+  const catName = (CATS.find(c=>c[0]===p.c)||["",""])[1];
+  const s = p.allergy ? allergySentence() : p;
+  li.innerHTML = `<div class="cat"><span></span></div><p class="ja"></p><p class="en"></p>`;
+  li.querySelector(".cat span").textContent = catName;
+  if(p.new){ const n=document.createElement("span"); n.className="new"; n.textContent="NEW"; li.querySelector(".cat").appendChild(n); }
+  if(p.post){ const f=document.createElement("span"); f.className="from"; f.textContent="From: "+p.post; li.querySelector(".cat").appendChild(f); }
+  li.querySelector(".ja").textContent = s.ja;
+  li.querySelector(".en").textContent = s.en;
+  if(mode==="brave" && !p.allergy){
+    const ro=document.createElement("p"); ro.className="ro"; ro.textContent=p.ro; li.appendChild(ro);
+    const sy=document.createElement("p"); sy.className="say"; sy.textContent="🗣 "+p.say; li.appendChild(sy);
+  }
+  if(p.allergy){
+    const box=document.createElement("div"); box.className="allergy";
+    ALLERGENS.forEach(a=>{
+      const b=document.createElement("button"); b.type="button"; b.className="al";
+      b.textContent = a[0]+" · "+a[1];
+      b.setAttribute("aria-pressed", allergySel.some(x=>x[0]===a[0]));
+      b.onclick=()=>{ const i=allergySel.findIndex(x=>x[0]===a[0]); if(i>=0) allergySel.splice(i,1); else allergySel.push(a); render(); };
+      box.appendChild(b);
+    });
+    li.appendChild(box);
+  }
+  const tip = p.allergy ? "Food allergy rules vary. For serious allergies, also carry a written allergy card." : p.tip;
+  if(mode!=="shy" && tip){ const t=document.createElement("p"); t.className="tip"; t.textContent="💡 Mom tip: "+tip; li.appendChild(t); }
+  li.appendChild(buttons(p, li));
+  return li;
+}
+
+function matches(p){
+  if(!query) return true;
+  const q = query.toLowerCase();
+  return [p.ja,p.en,p.ro,p.post||""].some(x=>x.toLowerCase().includes(q));
+}
+function render(){
+  document.querySelectorAll(".mode").forEach(b=>b.setAttribute("aria-pressed", b.dataset.m===mode));
+  document.getElementById("howto").textContent = HOWTO[mode];
+  const chips = document.getElementById("chips");
+  chips.innerHTML = "";
+  CATS.forEach(([k,label])=>{
+    const b=document.createElement("button"); b.type="button"; b.className="chip"; b.textContent=label;
+    b.setAttribute("aria-pressed", k===cat); b.onclick=()=>{ cat=k; render(); };
+    chips.appendChild(b);
+  });
+  const list = document.getElementById("list"); list.innerHTML="";
+  const items = PHRASES.filter(p=>(cat==="all"||(cat==="new"?p.new:p.c===cat)) && matches(p));
+  items.forEach((p,i)=>{
+    list.appendChild(card(p));
+    if(!query && ((cat==="all" && i===13) || (cat==="food" && i===items.length-1))) list.appendChild(card({c:"food", allergy:true}));
+  });
+  if(!items.length){
+    const e=document.createElement("li"); e.className="empty";
+    e.textContent="Nothing yet! DM us the phrase you need and we'll add it. 🙌";
+    list.appendChild(e);
+  }
+}
+document.querySelectorAll(".mode").forEach(b=>b.onclick=()=>{ mode=b.dataset.m; try{localStorage.setItem("yjf-mode",mode);}catch(e){} render(); });
+document.getElementById("search").addEventListener("input", e=>{ query=e.target.value.trim(); render(); });
+
+/* start */
+const start = (location.hash||"").slice(1);
+go(MEALS[start] || start==="talk" ? start : "home");
+
+/* offline support */
+if("serviceWorker" in navigator){ window.addEventListener("load", ()=>{ navigator.serviceWorker.register("sw.js").catch(()=>{}); }); }
+</script>
+</body>
+</html>
