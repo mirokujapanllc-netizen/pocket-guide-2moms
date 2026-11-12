@@ -312,9 +312,10 @@ const SHOP_TYPES = {
   "デニーズ":"🍽 Family restaurant", "鳥貴族":"🍢 Yakitori pub", "くら寿司":"🍣 Conveyor-belt sushi",
   "大戸屋":"🍱 Japanese set meals", "やよい軒":"🍱 Japanese set meals", "CoCo壱番屋":"🍛 Japanese curry", "牛角":"🥩 Yakiniku (BBQ)", "モスバーガー":"🍔 Japanese burgers", "串カツ田中":"🍢 Fried skewers (kushikatsu)", "一蘭":"🍜 Ramen", "鶴橋風月":"🥞 Okonomiyaki"
 };
-const MEAL_PHOTOS = {breakfast:true, lunch:true}; /* photos: img/shop-<meal>-<number>.jpg, same order as the list */
+const MEAL_PHOTOS = {breakfast:true, lunch:true, dinner:true}; /* photos: img/shop-<meal>-<number>.jpg, same order as the list */
 /* ===== CHEAT SHEETS: newest first. file = img/<id>.jpg, thumbnail = img/<id>-thumb.jpg ===== */
 const SHEETS = [
+  {id:"dinner", title:"Dinner deals", note:"9 chains, all under $7", isNew:true},
   {id:"lunch", title:"Secret lunch menus", note:"9 chains from $3", isNew:true},
   {id:"restaurant-etiquette", title:"Japanese restaurant etiquette", note:"Just say \"Sumimasen!\"", isNew:true},
   {id:"breakfast", title:"Skip the hotel breakfast", note:"9 chains under $6"},
@@ -329,7 +330,7 @@ const SHEETS = [
   {id:"toilet-cheatsheet", title:"Toilet button cheat sheet", note:"Match the kanji"},
   {id:"trash-cans", title:"No trash cans in Japan?!", note:"What Japanese parents do"}
 ];
-const MEAL_SHEET = {breakfast:"breakfast", lunch:"lunch"};
+const MEAL_SHEET = {breakfast:"breakfast", lunch:"lunch", dinner:"dinner"};
 /* ===== PHRASES: edit this list to update the Talk section =====
    new:true  → shows a NEW badge and appears under "✨ New"
    post:"…"  → shows which Instagram post it came from */
