@@ -316,7 +316,8 @@ const MEALS = {
       {ja:"和牛ハンバーグ", en:"Wagyu hamburg steak", what:"Japanese-style patty with sauce, served with rice", tip:"Not a burger. No bun. Even juicier."},
       {ja:"和牛焼肉", en:"Wagyu yakiniku (BBQ)", what:"Grill it yourself at the table", tip:"Order one plate. Then panic-order five."},
       {ja:"和牛すき焼き", en:"Wagyu sukiyaki", what:"Sweet soy hot pot. Dip the meat in raw egg", tip:"Dipped in raw egg. Trust us."},
-      {ja:"和牛ステーキ", en:"Wagyu steak", what:"Thick-cut wagyu, often cooked in front of you", tip:"The dream. Bring your credit card."}
+      {ja:"和牛ステーキ", en:"Wagyu steak", what:"Thick-cut wagyu, often cooked in front of you", tip:"The dream. Bring your credit card."},
+      {ja:"牛カツ", en:"Gyukatsu (beef cutlet)", what:"Crispy outside, rare inside. Many shops let you finish each bite on a mini grill at your table. Not always wagyu, but our favorite!", tip:"Bonus! We forgot it in our post. Our #1 pick.", nophoto:true}
     ]
   }
 };
@@ -324,7 +325,7 @@ const MEALS = {
 const SHOP_TYPES = {
   "和牛コロッケ":"💲 Street snack","和牛串":"💲 Street snack","和牛炙り寿司":"💲 Street snack",
   "和牛丼":"💲💲 Lunch level","和牛バーガー":"💲💲 Lunch level","和牛ハンバーグ":"💲💲 Lunch level",
-  "和牛焼肉":"💲💲💲 Splurge","和牛すき焼き":"💲💲💲 Splurge","和牛ステーキ":"💲💲💲 Splurge",
+  "和牛焼肉":"💲💲💲 Splurge","和牛すき焼き":"💲💲💲 Splurge","和牛ステーキ":"💲💲💲 Splurge","牛カツ":"⭐ Bonus: Moms’ pick",
   "なか卯":"🍚 Rice bowls & udon", "すき家":"🐮 Beef bowls", "松屋":"🐮 Beef bowls & set meals", "吉野家":"🐮 Beef bowls",
   "マクドナルド":"🍔 Burgers", "カフェ・ベローチェ":"☕ Café", "ガスト":"🍽 Family restaurant", "ドトールコーヒー":"☕ Café",
   "コメダ珈琲店":"☕ Coffee shop", "サイゼリヤ":"🍝 Italian family restaurant", "丸亀製麺":"🍜 Udon noodles",
@@ -491,7 +492,7 @@ function renderMeal(key){
   const list = document.getElementById("shopList"); list.innerHTML = "";
   m.shops.forEach((s,i)=>{
     const li = document.createElement("li"); li.className = "shop"; li.style.setProperty("--c", m.color);
-    if(MEAL_PHOTOS[key]){ const im=document.createElement("img"); im.className="simg"; im.loading="lazy"; im.alt=s.en+" "+s.what; im.src="img/shop-"+key+"-"+(i+1)+".jpg"; li.appendChild(im); }
+    if(MEAL_PHOTOS[key] && !s.nophoto){ const im=document.createElement("img"); im.className="simg"; im.loading="lazy"; im.alt=s.en+" "+s.what; im.src="img/shop-"+key+"-"+(i+1)+".jpg"; li.appendChild(im); }
     if(SHOP_TYPES[s.ja]){ const t=document.createElement("span"); t.className="type"; t.textContent=SHOP_TYPES[s.ja]; li.appendChild(t); }
     li.insertAdjacentHTML("beforeend", `<div class="top"><p class="jn"></p><p class="en"></p></div><p class="what"></p>`);
     li.querySelector(".jn").textContent = s.ja;
