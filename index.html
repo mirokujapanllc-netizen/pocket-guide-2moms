@@ -159,6 +159,7 @@ footer b{color:var(--fg);font-family:var(--display)}
       <button type="button" class="tile" data-go="lunch" style="--c:var(--noon)"><span class="e">🍱</span><b>Lunch</b><small>Secret lunch menus. 9 chains from $3.</small></button>
       <button type="button" class="tile" data-go="dinner" style="--c:var(--night)"><span class="e">🍜</span><b>Dinner</b><small>Dinner deals. 9 chains from 70¢.</small></button>
       <button type="button" class="tile" data-go="talk" style="--c:var(--brave)"><span class="e">🗣</span><b>Talk</b><small>Shy, Lazy, or Brave? Japanese phrases.</small></button>
+      <button type="button" class="tile wide" data-go="wagyu" style="--c:#b3262b"><span class="e">🥩</span><span><b>✨ Wagyu: $3 or $300?</b><br><small>9 ways to eat wagyu. Find them near you on Google Maps.</small></span></button>
       <button type="button" class="tile wide" data-go="sheets" style="--c:var(--brown)"><span class="e">📋</span><span><b>Cheat sheets</b><br><small>All our lists from Instagram. Tap to zoom in!</small></span></button>
     </div>
     <p class="note" style="margin-top:12px">📋 <b>How to find a shop:</b> tap <b>Copy Japanese name</b>, paste it into Google Maps, and you'll see the nearest one. English names don't always show up!</p>
@@ -226,7 +227,7 @@ footer b{color:var(--fg);font-family:var(--display)}
     <span>Follow us so you don't miss updates. We add new stuff with every post!</span>
     <span>📲 Keep it handy: iPhone Safari › Share › Add to Home Screen. Android Chrome › ⋮ › Add to Home screen.</span>
     <span>Prices: tax included, checked November 2026. They vary by location and season.</span>
-    <span>Last updated: November 11, 2026</span>
+    <span>Last updated: November 13, 2026</span>
   </footer>
 </div>
 
@@ -302,9 +303,28 @@ const MEALS = {
       {ja:"鶴橋風月", en:"Tsuruhashi Fugetsu", what:"Pork okonomiyaki, cooked on the griddle in front of you (price varies by store). Some stores have happy hour", price:"¥1,080~", usd:"$6.88~", tip:"Some stores do happy hour. Half-price beer? Yes, please."}
     ]
   }
+  ,wagyu:{
+    color:"#b3262b", eyebrow:"Wagyu · From our post “Wagyu for $3 or $300?”", copyLabel:"📋 Copy Japanese word",
+    title:"Wagyu for $3 or $300? 🥩", lead:"9 ways to eat wagyu. Pick your budget, then tap Open Maps to find it near you.",
+    note:"💡 Tap Open Maps, then compare prices and reviews before you walk in. Same burger, same area: we saw $16 and $50. Tourist spots often charge more. Steak and yakiniku menus often show the price per 100g. Checked November 2026.",
+    shops:[
+      {ja:"和牛コロッケ", en:"Wagyu croquette", what:"Fried potato and wagyu. Street snack at food markets", tip:"Cheapest way to try wagyu. Eat it hot."},
+      {ja:"和牛串", en:"Wagyu skewer", what:"Grilled wagyu on a stick. Popular at food markets", tip:"One bite. Big price. Check before you order."},
+      {ja:"和牛炙り寿司", en:"Seared wagyu sushi", what:"Lightly seared wagyu on rice", tip:"Wagyu, one bite at a time."},
+      {ja:"和牛丼", en:"Wagyu rice bowl", what:"Sliced wagyu on rice. Often a lunch set", tip:"Lunch time = best deal."},
+      {ja:"和牛バーガー", en:"Wagyu burger", what:"Burger with a wagyu patty", tip:"$16 or $50, same street. We ate the $16 one."},
+      {ja:"和牛ハンバーグ", en:"Wagyu hamburg steak", what:"Japanese-style patty with sauce, served with rice", tip:"Not a burger. No bun. Even juicier."},
+      {ja:"和牛焼肉", en:"Wagyu yakiniku (BBQ)", what:"Grill it yourself at the table", tip:"Order one plate. Then panic-order five."},
+      {ja:"和牛すき焼き", en:"Wagyu sukiyaki", what:"Sweet soy hot pot. Dip the meat in raw egg", tip:"Dipped in raw egg. Trust us."},
+      {ja:"和牛ステーキ", en:"Wagyu steak", what:"Thick-cut wagyu, often cooked in front of you", tip:"The dream. Bring your credit card."}
+    ]
+  }
 };
 /* What kind of shop it is (shown as a label on every shop card) */
 const SHOP_TYPES = {
+  "和牛コロッケ":"💲 Street snack","和牛串":"💲 Street snack","和牛炙り寿司":"💲 Street snack",
+  "和牛丼":"💲💲 Lunch level","和牛バーガー":"💲💲 Lunch level","和牛ハンバーグ":"💲💲 Lunch level",
+  "和牛焼肉":"💲💲💲 Splurge","和牛すき焼き":"💲💲💲 Splurge","和牛ステーキ":"💲💲💲 Splurge",
   "なか卯":"🍚 Rice bowls & udon", "すき家":"🐮 Beef bowls", "松屋":"🐮 Beef bowls & set meals", "吉野家":"🐮 Beef bowls",
   "マクドナルド":"🍔 Burgers", "カフェ・ベローチェ":"☕ Café", "ガスト":"🍽 Family restaurant", "ドトールコーヒー":"☕ Café",
   "コメダ珈琲店":"☕ Coffee shop", "サイゼリヤ":"🍝 Italian family restaurant", "丸亀製麺":"🍜 Udon noodles",
@@ -312,9 +332,10 @@ const SHOP_TYPES = {
   "デニーズ":"🍽 Family restaurant", "鳥貴族":"🍢 Yakitori pub", "くら寿司":"🍣 Conveyor-belt sushi",
   "大戸屋":"🍱 Japanese set meals", "やよい軒":"🍱 Japanese set meals", "CoCo壱番屋":"🍛 Japanese curry", "牛角":"🥩 Yakiniku (BBQ)", "モスバーガー":"🍔 Japanese burgers", "串カツ田中":"🍢 Fried skewers (kushikatsu)", "一蘭":"🍜 Ramen", "鶴橋風月":"🥞 Okonomiyaki"
 };
-const MEAL_PHOTOS = {breakfast:true, lunch:true, dinner:true}; /* photos: img/shop-<meal>-<number>.jpg, same order as the list */
+const MEAL_PHOTOS = {breakfast:true, lunch:true, dinner:true, wagyu:true}; /* photos: img/shop-<meal>-<number>.jpg, same order as the list */
 /* ===== CHEAT SHEETS: newest first. file = img/<id>.jpg, thumbnail = img/<id>-thumb.jpg ===== */
 const SHEETS = [
+  {id:"wagyu", title:"Wagyu for $3 or $300?", note:"9 ways, 3 budgets", isNew:true},
   {id:"buttons", title:"Press it or don't?", note:"8 buttons in Japan", isNew:true},
   {id:"dinner", title:"Dinner deals", note:"9 chains, all under $7", isNew:true},
   {id:"lunch", title:"Secret lunch menus", note:"9 chains from $3", isNew:true},
@@ -331,7 +352,7 @@ const SHEETS = [
   {id:"toilet-cheatsheet", title:"Toilet button cheat sheet", note:"Match the kanji"},
   {id:"trash-cans", title:"No trash cans in Japan?!", note:"What Japanese parents do"}
 ];
-const MEAL_SHEET = {breakfast:"breakfast", lunch:"lunch", dinner:"dinner"};
+const MEAL_SHEET = {breakfast:"breakfast", lunch:"lunch", dinner:"dinner", wagyu:"wagyu"};
 /* ===== PHRASES: edit this list to update the Talk section =====
    new:true  → shows a NEW badge and appears under "✨ New"
    post:"…"  → shows which Instagram post it came from */
@@ -340,6 +361,7 @@ const CATS = [
   ["onsen","♨️ Onsen"],["shop","🏪 Konbini & shops"],["help","🆘 Help"],["basic","🙏 Basics"]
 ];
 const PHRASES = [
+  {c:"food", new:true, post:"Wagyu for $3 or $300?", ja:"これは和牛ですか？", ro:"Kore wa wagyū desu ka?", en:"Is this wagyu?", say:"koh-reh wah wah-gyoo des-ka", tip:"国産牛 (Japanese beef) is not always wagyu. Look for 和牛."},
   {c:"food", new:true, post:"Secret lunch menus", ja:"ランチセットはありますか？", ro:"Ranchi setto wa arimasu ka?", en:"Do you have a lunch set?", say:"ran-chee set-toh wah ah-ree-mas-ka", tip:"Lunch deals are often weekdays only."},
   {c:"food", new:true, post:"Secret lunch menus", ja:"ランチはまだ大丈夫ですか？", ro:"Ranchi wa mada daijōbu desu ka?", en:"Can I still order lunch?", say:"ran-chee wah mah-dah dai-joh-boo des-ka", tip:"Many lunch deals end around 2 or 3pm."},
   {c:"food", new:true, post:"Secret lunch menus", ja:"食券はどこで買いますか？", ro:"Shokken wa doko de kaimasu ka?", en:"Where do I buy a meal ticket?", say:"shok-ken wah doh-koh deh kai-mas-ka", tip:"Buy a ticket at the machine, then hand it to the staff."},
@@ -484,7 +506,7 @@ function renderMeal(key){
     }
     if(s.tip){ const t=document.createElement("p"); t.className="tip"; t.textContent="😂 "+s.tip; li.appendChild(t); }
     const c=document.createElement("div"); c.className="ctrl";
-    const cp=document.createElement("button"); cp.type="button"; cp.className="btn copy"; cp.textContent="📋 Copy Japanese name";
+    const cp=document.createElement("button"); cp.type="button"; cp.className="btn copy"; cp.textContent=m.copyLabel||"📋 Copy Japanese name";
     cp.onclick=()=>copyText(s.ja); c.appendChild(cp);
     const a=document.createElement("a"); a.className="btn"; a.textContent="🗺 Open Maps";
     a.href="https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(s.ja);
