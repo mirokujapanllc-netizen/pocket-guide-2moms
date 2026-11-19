@@ -161,6 +161,7 @@ footer b{color:var(--fg);font-family:var(--display)}
       <button type="button" class="tile" data-go="dinner" style="--c:var(--night)"><span class="e">🍜</span><b>Dinner</b><small>Dinner deals. 9 chains from 70¢.</small></button>
       <button type="button" class="tile" data-go="talk" style="--c:var(--brave)"><span class="e">🗣</span><b>Talk</b><small>Shy, Lazy, or Brave? Japanese phrases.</small></button>
       <button type="button" class="tile wide" data-go="kidsfree" style="--c:#2f7f8f"><span class="e">👶</span><span><b>✨ Kids eat free</b><br><small>6 chains where little ones eat free. Adults eat all you can.</small></span></button>
+      <button type="button" class="tile wide" data-go="bakery" style="--c:#a0622d"><span class="e">🥐</span><span><b>✨ Bakery breakfast</b><br><small>Find a bakery near you in one tap. Most breads under $3.</small></span></button>
       <button type="button" class="tile wide" data-go="wagyu" style="--c:#b3262b"><span class="e">🥩</span><span><b>✨ Wagyu: $3 or $300?</b><br><small>9 ways to eat wagyu. Find them near you on Google Maps.</small></span></button>
       <button type="button" class="tile wide" data-go="sheets" style="--c:var(--brown)"><span class="e">📋</span><span><b>Cheat sheets</b><br><small>All our lists from Instagram. Tap to zoom in!</small></span></button>
     </div>
@@ -335,6 +336,20 @@ const MEALS = {
       {ja:"牛カツ", en:"Gyukatsu (beef cutlet)", what:"Crispy outside, rare inside. Many shops let you finish each bite on a mini grill at your table. Not always wagyu, but our favorite!", tip:"Bonus! We forgot it in our post. Our #1 pick."}
     ]
   }
+  ,bakery:{
+    color:"#a0622d", eyebrow:"Breakfast · From our post “Bakery breakfast”", copyLabel:"📋 Copy Japanese word",
+    title:"Bakery breakfast 🥐", lead:"Tap Open Maps on the first card to find bakeries near you. Then pick your bread!",
+    note:"💡 Our plan: buy bread at a bakery, then grab fresh coffee + cut fruit or yogurt at a konbini. Early morning? Not every bread is baked yet, so we often buy the day before. Big stations usually have a bakery. Prices are a rough guide and vary by shop. ¥158 = $1.",
+    shops:[
+      {ja:"パン屋", en:"Bakery (search this!)", what:"Type パン屋 into Google Maps to find bakeries near you", tip:"English search misses lots of small local shops."},
+      {ja:"メロンパン", en:"Melon pan", what:"Sweet cookie crust. No melon inside. About ¥150–250", tip:"Zero melon. Zero regrets."},
+      {ja:"カレーパン", en:"Curry pan", what:"Fried bun with curry inside. About ¥180–280", tip:"Lunch disguised as bread."},
+      {ja:"あんパン", en:"Anpan", what:"Sweet red bean paste. About ¥150–250", tip:"Beans for breakfast. Trust us."},
+      {ja:"クリームパン", en:"Cream pan", what:"Soft bun with custard. About ¥150–250", tip:"Dessert, but make it morning."},
+      {ja:"カツサンド", en:"Katsu sando", what:"Pork cutlet sandwich. About ¥350–500", tip:"No crusts. You're welcome."},
+      {ja:"フレンチトースト", en:"French toast (Moms' pick)", what:"Already soaked and baked. About ¥200–350", tip:"Just warm it up. Mom life."}
+    ]
+  }
 };
 /* What kind of shop it is (shown as a label on every shop card) */
 const SHOP_TYPES = {
@@ -351,6 +366,7 @@ const SHOP_TYPES = {
 const MEAL_PHOTOS = {breakfast:true, lunch:true, dinner:true, wagyu:true, kidsfree:true}; /* photos: img/shop-<meal>-<number>.jpg, same order as the list */
 /* ===== CHEAT SHEETS: newest first. file = img/<id>.jpg, thumbnail = img/<id>-thumb.jpg ===== */
 const SHEETS = [
+  {id:"bakery", title:"Bakery breakfast", note:"10 breads, most under $3", isNew:true},
   {id:"beauty", title:"A Japanese hairdresser's beauty picks", note:"What I actually use. From $1", isNew:true},
   {id:"chuhi", title:"Juice? Nope.", note:"9 konbini chu-hi, 3% to 9%", isNew:true},
   {id:"buy-these", title:"Buy these in Japan.", note:"Same brand. Way less.", isNew:true},
@@ -375,7 +391,7 @@ const SHEETS = [
   {id:"toilet-cheatsheet", title:"Toilet button cheat sheet", note:"Match the kanji"},
   {id:"trash-cans", title:"No trash cans in Japan?!", note:"What Japanese parents do"}
 ];
-const MEAL_SHEET = {breakfast:"breakfast", lunch:"lunch", dinner:"dinner", wagyu:"wagyu", kidsfree:"kidsfree"};
+const MEAL_SHEET = {bakery:"bakery", breakfast:"breakfast", lunch:"lunch", dinner:"dinner", wagyu:"wagyu", kidsfree:"kidsfree"};
 /* ===== PHRASES: edit this list to update the Talk section =====
    new:true  → shows a NEW badge and appears under "✨ New"
    post:"…"  → shows which Instagram post it came from */
@@ -384,6 +400,7 @@ const CATS = [
   ["onsen","♨️ Onsen"],["shop","🏪 Konbini & shops"],["help","🆘 Help"],["basic","🙏 Basics"]
 ];
 const PHRASES = [
+  {c:"food", new:true, post:"Bakery breakfast", ja:"店内で食べられますか？", ro:"Tennai de taberaremasu ka?", en:"Can I eat here?", say:"ten-nai deh tah-beh-rah-reh-mas-ka", tip:"Some bakeries have seats. Some use a different tray color for eat-in. Check the sign!"},
   {c:"shop", new:true, post:"Beauty picks", ja:"海外で使えますか？", ro:"Kaigai de tsukaemasu ka?", en:"Can I use it outside Japan?", say:"kai-gai deh tsoo-kah-eh-mas-ka", tip:"Many hair dryers and irons are 100V only. Check the box, or pack a voltage converter."},
   {c:"shop", new:true, post:"Juice? Nope.", ja:"これはお酒ですか？", ro:"Kore wa osake desu ka?", en:"Is this alcohol?", say:"koh-reh wah oh-sah-keh des-ka", tip:"Look for お酒 on the can. Many fruit cans in the fridge are chu-hi (alcohol)."},
   {c:"shop", new:true, post:"Buy these in Japan.", ja:"このサイズはありますか？", ro:"Kono saizu wa arimasu ka?", en:"Do you have this in my size?", say:"koh-noh sai-zoo wah ah-ree-mas-ka", tip:"Shoes use cm sizes in Japan (e.g. 26 cm). Show the number on your phone."},
