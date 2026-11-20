@@ -143,6 +143,8 @@ footer b{color:var(--fg);font-family:var(--display)}
 .vscroll img{display:block;width:100%;height:auto;margin:0 auto}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
+<script>window.goatcounter={no_onload:true};</script>
+<script data-goatcounter="https://pocketguide2moms.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </head>
 <body>
 
@@ -469,6 +471,14 @@ function go(view){
   if(view==="talk") render();
   try{ history.replaceState(null,"","#"+view); }catch(e){}
   window.scrollTo(0,0);
+  track("/"+view, view);
+}
+/* Anonymous page counts (GoatCounter): which screens people open */
+function track(path,title){
+  try{
+    if(window.goatcounter && window.goatcounter.count){ window.goatcounter.count({path:path, title:title}); }
+    else { setTimeout(()=>{ try{ window.goatcounter && window.goatcounter.count && window.goatcounter.count({path:path, title:title}); }catch(e){} },1500); }
+  }catch(e){}
 }
 document.addEventListener("click", e=>{
   const t = e.target.closest("[data-go]");
@@ -557,7 +567,7 @@ function renderMeal(key){
     const cp=document.createElement("button"); cp.type="button"; cp.className="btn copy"; cp.textContent=m.copyLabel||"📋 Copy Japanese name";
     cp.onclick=()=>copyText(s.ja); c.appendChild(cp);
     const a=document.createElement("a"); a.className="btn"; a.textContent="🗺 Open Maps";
-    a.href="https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(s.ja);
+    a.href="https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(s.ja); a.addEventListener("click",()=>track("/maps/"+s.en, "Maps: "+s.en));
     a.target="_blank"; a.rel="noopener"; c.appendChild(a);
     li.appendChild(c);
     list.appendChild(li);
